@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#15151d">
+<title>คำต้องเชื่อม | IS ภาษาไทย 1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap');
+:root{
+  --bg:#101016;--panel:#1b1b25;--panel2:#22222e;--line:#ffffff16;
+  --text:#f7f7fb;--muted:#a1a1b2;--red:#f04b61;--red2:#ff7183;
+  --green:#45d6a0;--yellow:#ffc76a;--blue:#79a9ff;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#572634 0%,transparent 48%),var(--bg);color:var(--text);font-family:Prompt,Kanit,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{max-width:1120px;margin:auto;padding:24px 18px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,var(--red2),#b51e3b);display:grid;place-items:center;font-size:23px;box-shadow:0 8px 24px #f04b6140}
+.brand h1{font-size:22px;margin:0;line-height:1.2}
+.brand h1 span{color:var(--red2)}
+.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:1.4px;margin-top:3px}
+.header-right{display:flex;align-items:center;gap:10px}
+.status{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:8px 12px;border-radius:30px;background:#ffffff08}
+.status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--yellow);margin-right:7px}
+.status.ready i{background:var(--green)}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.nav button{border:1px solid var(--line);background:#ffffff08;color:var(--muted);padding:10px 16px;border-radius:12px;font-size:13px}
+.nav button.active{background:#f04b6120;border-color:#f04b6170;color:#fff}
+.view{display:none}.view.active{display:block}
+.panel{background:linear-gradient(145deg,#20202b,#191922);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 18px 55px #0004}
+.panel-title{font-size:19px;font-weight:600;margin:0 0 5px}
+.panel-sub{font-size:13px;color:var(--muted);margin:0 0 20px}
+.grid{display:grid;gap:16px}
+.grid.two{grid-template-columns:1.1fr .9fr}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+.field-label{font-size:13px;color:#c8c8d2;display:block;margin-bottom:8px}
+input[type=text]{width:100%;background:#111119;border:1px solid #ffffff20;border-radius:12px;color:#fff;padding:13px 14px;outline:none}
+input:focus{border-color:var(--red2);box-shadow:0 0 0 3px #f04b611a}
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mode{background:#ffffff07;border:1px solid var(--line);border-radius:16px;padding:16px;text-align:left;color:#fff;transition:.2s}
+.mode:hover{transform:translateY(-2px)}
+.mode.selected{background:#f04b6118;border-color:var(--red)}
+.mode .emoji{font-size:25px}
+.mode strong{display:block;font-size:16px;margin:6px 0 2px}
+.mode small{color:var(--muted);font-size:12px;line-height:1.5}
+.btn{border:0;border-radius:12px;padding:13px 18px;font-weight:600;color:#fff;background:var(--red);box-shadow:0 7px 20px #f04b6128}
+.btn:hover{background:#ff6378}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn.secondary{background:#ffffff0b;border:1px solid var(--line);box-shadow:none;color:#eee}
+.btn.secondary:hover{background:#ffffff16}
+.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--muted)}
+.btn.full{width:100%}
+.note{font-size:12px;color:var(--muted);line-height:1.7}
+.notice{padding:12px 14px;border-radius:12px;background:#79a9ff12;border:1px solid #79a9ff35;color:#c8d9ff;font-size:12px;line-height:1.65}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{padding:15px;border-radius:15px;background:#ffffff08;border:1px solid var(--line)}
+.stat span{display:block;color:var(--muted);font-size:12px}
+.stat strong{display:block;font-size:25px;margin-top:4px}
+.stat .red{color:var(--red2)}.stat .green{color:var(--green)}
+.game-layout{display:grid;grid-template-columns:1fr 270px;gap:16px}
+.game-main{min-width:0}
+.word-card{text-align:center;border:1px solid #f04b6150;background:linear-gradient(135deg,#f04b611b,#ffffff04);border-radius:20px;padding:28px 15px;margin:18px 0}
+.eyebrow{font-size:12px;color:var(--muted)}
+.current-word{font-size:clamp(36px,7vw,56px);font-weight:800;margin:7px 0;overflow-wrap:anywhere}
+.target-pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #f04b6170;background:#f04b6118;color:#ff9aa7;padding:7px 13px;border-radius:30px;font-size:13px}
+.progress{height:7px;border-radius:20px;background:#ffffff15;overflow:hidden;margin:12px 0 18px}
+.progress>div{height:100%;width:100%;background:linear-gradient(90deg,var(--red),#ff9c78);transition:width .5s}
+.answer-row{display:flex;gap:9px}
+.answer-row input{flex:1;min-width:0;font-size:16px}
+.feedback{min-height:32px;text-align:center;padding:9px 3px;font-size:13px;color:var(--green)}
+.feedback.error{color:#ff8796}
+.side-card{background:#ffffff06;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.side-card h3{font-size:14px;margin:0 0 10px}
+.history{display:flex;gap:7px;flex-wrap:wrap;min-height:34px}
+.chip{background:#ffffff0c;border:1px solid #ffffff17;border-radius:9px;padding:6px 9px;font-size:12px}
+.chip.latest{border-color:#f04b6170;color:#ff9aa7}
+.side-actions{display:grid;gap:8px}
+.kpi{font-size:28px;font-weight:700}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:500}
+td{color:#eee}
+.rank{color:var(--yellow);font-weight:700}
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:13px}
+.bar-list{display:grid;gap:12px}
+.bar-row{display:grid;grid-template-columns:90px 1fr 45px;align-items:center;gap:10px;font-size:12px}
+.bar-track{height:9px;background:#ffffff12;border-radius:20px;overflow:hidden}
+.bar-track div{height:100%;background:linear-gradient(90deg,var(--red),#ff9b83);border-radius:20px}
+footer{text-align:center;color:#77778a;font-size:12px;margin-top:22px;line-height:1.8}
+footer strong{color:#ff8292}
+.modal-backdrop{position:fixed;inset:0;background:#000a;display:none;place-items:center;padding:18px;z-index:10}
+.modal-backdrop.show{display:grid}
+.modal{max-width:560px;width:100%;background:#20202b;border:1px solid var(--line);border-radius:20px;padding:24px;max-height:85vh;overflow:auto}
+.modal h2{margin:0 0 12px}
+.modal p,.modal li{font-size:13px;color:#c3c3ce;line-height:1.8}
+.close-row{display:flex;justify-content:flex-end;margin-top:18px}
+.small-muted{font-size:11px;color:var(--muted)}
+@media(max-width:800px){.grid.two,.game-layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.mode-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.app{padding:17px 12px 30px}.panel{padding:17px}.brand h1{font-size:18px}.header-right .status{max-width:130px;font-size:10px}.nav button{flex:1;padding:10px 7px;font-size:12px}.mode-grid{grid-template-columns:1fr 1fr}.answer-row{flex-direction:column}.answer-row .btn{width:100%}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:22px}}
+@media print{body{background:#fff;color:#111}.app{max-width:none}.nav,header,.no-print,footer{display:none!important}.view{display:none!important}#dashboard.view{display:block!important}.panel,.stat{background:#fff;color:#111;box-shadow:none;border:1px solid #ddd}td{color:#111}th{color:#555}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand">
+  <div class="brand-mark">🔗</div>
+  <div><h1>คำต้อง<span>เชื่อม</span></h1><small>THAI WORD CHAIN · LEARNING GAME</small></div>
+ </div>
+ <div class="header-right">
+  <div class="status" id="dictStatus"><i></i><span>กำลังโหลดคลังคำ...</span></div>
+ </div>
+</header>
+
+<nav class="nav no-print">
+ <button class="active" data-view="home">หน้าแรก</button>
+ <button data-view="play">เล่นเกม</button>
+ <button data-view="dashboard">Dashboard</button>
+ <button data-view="leaderboard">ตารางอันดับ</button>
+ <button data-view="guide">วิธีเล่น</button>
+</nav>
+
+<section class="view active" id="home">
+ <div class="grid two">
+  <div class="panel">
+   <h2 class="panel-title">ยินดีต้อนรับสู่เกมคำต้องเชื่อม</h2>
+   <p class="panel-sub">ฝึกทักษะภาษาไทยผ่านเกมจับคู่คำและการคิดอย่างรวดเร็ว</p>
+   <label class="field-label" for="playerName">ชื่อผู้เล่น / ชื่อเล่น</label>
+   <input id="playerName" type="text" maxlength="30" placeholder="กรอกชื่อของคุณ">
+   <div style="height:19px"></div>
+   <div class="field-label">เลือกระดับความยาก</div>
+   <div class="mode-grid">
+    <button class="mode selected" id="easyMode" onclick="chooseMode('easy')">
+     <span class="emoji">🌱</span><strong>โหมดเด็ก</strong><small>คำง่าย ๆ ในชีวิตประจำวัน เหมาะกับทุกวัย</small>
+    </button>
+    <button class="mode" id="normalMode" onclick="chooseMode('normal')">
+     <span class="emoji">⭐</span><strong>โหมดทั่วไป</strong><small>คำคุ้นเคย ผสมคำที่ยากขึ้นเล็กน้อย</small>
+    </button>
+    <button class="mode" id="hardMode" onclick="chooseMode('hard')">
+     <span class="emoji">🔥</span><strong>โหมดท้าทาย</strong><small>คำยาวและหลากหลายขึ้น แต่ยังเป็นคำในคลัง</small>
+    </button>
+   </div>
+   <div style="height:18px"></div>
+   <button class="btn full" id="startButton" onclick="startGame()" disabled>กำลังเตรียมคลังคำ...</button>
+   <p class="note" id="loadMessage">กำลังโหลดคลังคำศัพท์ภาษาไทย กรุณารอสักครู่</p>
+  </div>
+  <div class="panel">
+   <h2 class="panel-title">เรียนรู้ผ่านการเล่น</h2>
+   <p class="panel-sub">กิจกรรมภาษาไทยที่ฝึกการสังเกต การคิด และคลังคำศัพท์</p>
+   <div class="stats" style="grid-template-columns:1fr 1fr">
+    <div class="stat"><span>เวลา / รอบ</span><strong class="red">60 วิ</strong></div>
+    <div class="stat"><span>รูปแบบเกม</span><strong>∞</strong></div>
+    <div class="stat"><span>ระบบคะแนน</span><strong>Combo</strong></div>
+    <div class="stat"><span>บันทึกผล</span><strong class="green">อัตโนมัติ</strong></div>
+   </div>
+   <div class="notice">เกมจะรับคำตอบเมื่อพบคำในพจนานุกรมที่โหลดมา และสามารถแบ่งคำเพื่อหาส่วนท้ายสำหรับเชื่อมคำต่อไปได้ ทั้งนี้การแบ่งคำภาษาไทยอาจมีคำกำกวม จึงควรทดสอบคลังคำก่อนใช้งานจริง</div>
+   <div style="height:16px"></div>
+   <button class="btn secondary full" onclick="showModal()">อ่านกติกาและเกณฑ์คะแนน</button>
+  </div>
+ </div>
+</section>
+
+<section class="view" id="play">
+ <div class="stats">
+  <div class="stat"><span>คะแนน</span><strong id="score">0</strong></div>
+  <div class="stat"><span>เวลาที่เหลือ</span><strong class="red" id="time">60</strong></div>
+  <div class="stat"><span>คอมโบ</span><strong id="combo">0</strong></div>
+  <div class="stat"><span>ระดับ</span><strong id="modeLabel" style="font-size:17px">โหมดเด็ก</strong></div>
+ </div>
+ <div class="game-layout">
+  <div class="panel game-main">
+   <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+    <div><h2 class="panel-title" style="margin:0">ถึงตาคุณแล้ว!</h2><div class="small-muted">พิมพ์คำใหม่ที่ขึ้นต้นด้วยคำเชื่อม</div></div>
+    <button class="btn ghost no-print" onclick="endGame(true)">จบเกม</button>
+   </div>
+   <div class="progress"><div id="progressBar"></div></div>
+   <div class="word-card">
+    <div class="eyebrow">คำล่าสุด</div>
+    <div class="current-word" id="currentWord">รถไฟ</div>
+    <div class="target-pill">คำที่ต้องนำมาต่อ <strong id="targetWord">ไฟ</strong></div>
+   </div>
+   <div class="answer-row">
+    <input id="answerInput" type="text" placeholder="พิมพ์คำตอบภาษาไทย..." autocomplete="off">
+    <button class="btn" id="submitButton" onclick="submitAnswer()">ส่งคำตอบ ↗</button>
+   </div>
+   <div class="feedback" id="feedback" aria-live="polite">คำตอบต้องเป็นคำในพจนานุกรมและเชื่อมได้ตามกติกา</div>
+   <div class="side-card">
+    <h3>ประวัติคำที่ตอบแล้ว</h3>
+    <div class="history" id="history"><span class="small-muted">ยังไม่มีคำตอบ</span></div>
+   </div>
+  </div>
+  <aside>
+   <div class="side-card">
+    <h3>สถิติรอบนี้</h3>
+    <div class="kpi" id="wordCount">0</div><div class="small-muted">คำที่เชื่อมสำเร็จ</div>
+    <div style="height:12px"></div>
+    <div class="kpi" id="bestCombo">0</div><div class="small-muted">คอมโบสูงสุด</div>
+   </div>
+   <div class="side-card">
+    <h3>การควบคุม</h3>
+    <div class="side-actions">
+     <button class="btn secondary" onclick="restartGame()">เริ่มรอบใหม่</button>
+     <button class="btn secondary" onclick="navigate('guide')">ดูกติกา</button>
+     <button class="btn secondary" onclick="navigate('home')">กลับหน้าแรก</button>
+    </div>
+   </div>
+  </aside>
+ </div>
+</section>
+
+<section class="view" id="dashboard">
+ <div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+   <div><h2 class="panel-title">Dashboard ภาพรวม</h2><p class="panel-sub">สรุปผลการเล่นบนอุปกรณ์และเบราว์เซอร์นี้</p></div>
+   <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn secondary" onclick="exportCSV()">ส่งออก CSV</button>
+    <button class="btn secondary" onclick="window.print()">พิมพ์รายงาน</button>
+   </div>
+  </div>
+  <div class="stats">
+   <div class="stat"><span>จำนวนรอบทั้งหมด</span><strong id="totalGames">0</strong></div>
+   <div class="stat"><span>คะแนนสะสม</span><strong id="totalPoints">0</strong></div>
+   <div class="stat"><span>คำที่เชื่อมสำเร็จ</span><strong id="totalWords">0</strong></div>
+   <div class="stat"><span>คะแนนเฉลี่ย / รอบ</span><strong id="averageScore">0</strong></div>
+  </div>
+  <div class="grid two">
+   <div class="side-card">
+    <h3>คะแนนสูงสุด 5 อันดับ</h3>
+    <div id="scoreBars" class="bar-list"><div class="empty">ยังไม่มีข้อมูล</div></div>
+   </div>
+   <div class="side-card">
+    <h3>สรุปตามระดับ</h3>
+    <div class="bar-list" id="modeStats"></div>
+   </div>
+  </div>
+  <div class="side-card" style="margin-top:14px">
+   <h3>ประวัติการเล่นล่าสุด</h3>
+   <div class="table-wrap"><table><thead><tr><th>วันที่ / เวลา</th><th>ผู้เล่น</th><th>ระดับ</th><th>คะแนน</th><th>คำที่ต่อได้</th></tr></thead><tbody id="recentRows"><tr><td colspan="5" class="empty">ยังไม่มีข้อมูล</td></tr></tbody></table></div>
+  </div>
+  <p class="note">หมายเหตุ: ข้อมูลนี้จัดเก็บใน Local Storage ของเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ได้รวมข้อมูลจากผู้เล่นคนอื่นหรืออุปกรณ์อื่น</p>
+ </div>
+</section>
+
+<section class="view" id="leaderboard">
+ <div class="panel">
+  <h2 class="panel-title">🏆 ตารางอันดับผู้เล่น</h2>
+  <p class="panel-sub">จัดอันดับตามคะแนนสูงสุดที่บันทึกไว้ในอุปกรณ์นี้</p>
+  <div class="table-wrap"><table><thead><tr><th>อันดับ</th><th>ชื่อผู้เล่น</th><th>ระดับ</th><th>คะแนน</th><th>คำที่เชื่อม</th><th>วันที่</th></tr></thead><tbody id="leaderRows"><tr><td colspan="6" class="empty">ยังไม่มีผู้เล่น</td></tr></tbody></table></div>
+  <div class="notice" style="margin-top:16px">หากต้องการให้ตารางอันดับรวมคะแนนจากนักเรียนหลายเครื่อง ต้องเชื่อมฐานข้อมูลออนไลน์และระบบผู้ใช้เพิ่มเติม เวอร์ชันนี้เป็นตารางอันดับภายในเครื่องเดียว</div>
+ </div>
+</section>
+
+<section class="view" id="guide">
+ <div class="panel">
+  <h2 class="panel-title">วิธีเล่นและเกณฑ์การให้คะแนน</h2>
+  <p class="panel-sub">อ่านก่อนเริ่มกิจกรรม</p>
+  <div class="grid two">
+   <div class="side-card">
+    <h3>กติกาการเล่น</h3>
+    <ol class="note" style="padding-left:20px">
+     <li>ผู้เล่นมีเวลา 60 วินาทีต่อหนึ่งรอบ</li>
+     <li>ดูคำเชื่อมที่แสดงบนหน้าจอ</li>
+     <li>พิมพ์คำศัพท์ภาษาไทยที่ขึ้นต้นด้วยคำเชื่อมนั้น</li>
+     <li>คำตอบต้องอยู่ในคลังพจนานุกรมที่เกมโหลดได้</li>
+     <li>คำตอบต้องสามารถแบ่งเป็นส่วนคำเพื่อใช้เชื่อมต่อได้</li>
+     <li>ห้ามใช้คำเดิมซ้ำภายในรอบเดียวกัน</li>
+    </ol>
+   </div>
+   <div class="side-card">
+    <h3>ระบบคะแนน</h3>
+    <p class="note">ตอบถูก 10 คะแนนต่อคำ และได้รับโบนัสเพิ่ม 5 คะแนนเมื่อคอมโบตั้งแต่ 3 ครั้งขึ้นไป คอมโบจะเริ่มนับใหม่เมื่อตอบผิด</p>
+    <h3 style="margin-top:18px">ระดับความยาก</h3>
+    <p class="note">โหมดเด็ก: จำกัดคำไว้ในชุดคำพื้นฐานที่คุ้นเคยในชีวิตประจำวัน</p>
+    <p class="note">โหมดทั่วไป: ใช้คำในคลังคำศัพท์ที่มีความยาวไม่เกิน 6 กลุ่มอักขระ</p>
+    <p class="note">โหมดท้าทาย: ใช้คำที่มีอย่างน้อย 4 กลุ่มอักขระ</p>
+   </div>
+  </div>
+  <div class="notice">ข้อจำกัดทางภาษา: พจนานุกรมช่วยยืนยันว่าคำอยู่ในรายการคำศัพท์ แต่การแยกคำประสมภาษาไทยอาจมีได้หลายแบบ เกมจึงใช้การแบ่งคำจากคลังคำเพื่อเลือกส่วนท้าย ไม่ใช่การตัดสินความหมายโดยผู้เชี่ยวชาญทุกกรณี</div>
+ </div>
+</section>
+
+<footer>
+ <strong>จัดทำโดยกลุ่ม isภาษาไทย1</strong><br>
+ เกมส่งเสริมการเรียนรู้ภาษาไทย · Thai Word Chain
+</footer>
+</div>
+
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)hideModal()">
+ <div class="modal">
+  <h2>📘 กติกาและวัตถุประสงค์</h2>
+  <p><b>วัตถุประสงค์</b><br>1. ส่งเสริมการเรียนรู้และเพิ่มพูนคลังคำศัพท์ภาษาไทย<br>2. ฝึกการสังเกตส่วนประกอบของคำและการเชื่อมโยงคำ<br>3. พัฒนาสมาธิ การคิดรวดเร็ว และการตัดสินใจ</p>
+  <p><b>เกณฑ์การตรวจคำ</b><br>ระบบตรวจว่าคำตอบอยู่ในรายการพจนานุกรม ขึ้นต้นด้วยคำเชื่อมที่กำหนด ไม่ซ้ำในรอบ และสามารถแบ่งเป็นส่วนคำเพื่อหาคำท้ายได้</p>
+  <p><b>แหล่งข้อมูลคำศัพท์</b><br>คลังคำศัพท์ภาษาไทยจากโครงการ thai-wordlist บน GitHub (ผู้พัฒนาควรตรวจสอบแหล่งที่มา เงื่อนไขการใช้งาน และความเหมาะสมของคำก่อนเผยแพร่ในโรงเรียน)</p>
+  <div class="close-row"><button class="btn" onclick="hideModal()">เข้าใจแล้ว</button></div>
+ </div>
+</div>
+
+<script>
+const DICT_URLS = [
+ "https://cdn.jsdelivr.net/gh/nv23/thai-wordlist@master/thai-wordlist.txt",
+ "https://raw.githubusercontent.com/nv23/thai-wordlist/master/thai-wordlist.txt"
+];
+const STORAGE_KEY = "thaiWordChainSchool_v1";
+const starterCandidates = ["รถไฟ","น้ำตก","ดอกไม้","โรงเรียน","ฟุตบอล","แม่น้ำ","ภูเขา","ไฟฟ้า","หนังสือ","รถยนต์","น้ำแข็ง","มะนาว","ต้นไม้","ทะเล","ของเล่น"];
+// คำพื้นฐานที่คุ้นเคย ใช้เป็นตัวกรองหลักของโหมดเด็ก
+const COMMON_WORDS = new Set((`กบ กา กาแฟ ไก่ ไข่ ข้าว ข้าวผัด ข้าวสาร ขนม ขนมปัง ขนมหวาน คน ครู ควาย คอมพิวเตอร์ งาน เงิน จาน ชาม ช้อน ช้าง ชุด ชูใจ ดิน ดินสอ ดาว เด็ก เดิน เดือน แดด ตา ต้นไม้ ตู้ เต่า โต๊ะ ถ้วย ถนน ถุง ทะเล ทุเรียน ธง น้ำ น้ำปลา น้ำตก น้ำแข็ง น้ำใจ น้ำตา น้ำชา น้ำผึ้ง นก นม นอน หนังสือ หน้า หนู หมู หมา หมี หัวใจ หู เห็ด เหรียญ ไฟ ไฟฟ้า ไฟฉาย ฝน ฝา ฝัน พ่อ แม่ พี่ น้อง บ้าน บ้านนา ปลา ปู ป่า ปาก ปีก ปืน เป็ด เปลือก ผัก ผลไม้ ผ้า ผีเสื้อ ผึ้ง ฝรั่ง พัดลม พ่อครัว ฟ้า ฟัน ภูเขา ภูมิใจ ม้า มะม่วง มะนาว มะพร้าว แมว แม่ค้า แม่น้ำ มือ มีด เมฆ เมือง ยา ยาย ยุง รถ รถไฟ รถยนต์ รถเมล์ รองเท้า รถบัส เรือ โรงเรียน โรงพยาบาล ลิง ลูกบอล ลูกแมว ลูกหมา วัด วัว วิ่ง เวลา เสื้อ เสือ เสียง แสง แก้ว แกง ไข่ดาว ไข่เจียว ข้าวต้ม ข้าวเหนียว ข้าวมันไก่ ข้าวไข่เจียว ต้นกล้า ต้นหญ้า ดอกไม้ ดอกบัว ดอกกุหลาบ ดอกทานตะวัน ตู้เย็น โทรศัพท์ โทรทัศน์ นาฬิกา น้ำใจดี น้ำอ้อย บะหมี่ บัว ปลาเค็ม ปลาทู ปลาทอง ปลาหมึก ผ้าห่ม ผ้าเช็ดตัว พริก มะเขือ มะเขือเทศ มะละกอ มะยม มะขาม มะกรูด มะไฟ มะเฟือง มังคุด ลำไย ลำดวน ส้ม ส้มโอ สับปะรด แตงโม แตงกวา กล้วย กล้วยไม้ ชมพู่ ฝรั่ง ลิ้นจี่ เงาะ องุ่น แอปเปิล ข้าวโพด ถั่ว งา ขิง ข่า ตะไคร้ ใบไม้ ใบหญ้า ใบตอง ใบเตย ใบชา กุ้ง ปูนา หอย ปลาไหล ปลากัด ปลาวาฬ โลมา ฉลาม เต่าทะเล ม้าน้ำ นกแก้ว นกฮูก นกยูง นกพิราบ ผีเสื้อ แมลง ผึ้ง มด ยีราฟ ชะนี ลิงกัง กระต่าย กระรอก สุนัข แมวป่า เสือดาว ช้างป่า ม้าลาย จระเข้ งู กิ้งก่า จิ้งจก ตุ๊กแก กบเขียว กบต้นไม้`).split(/\s+/));
+let dictionary = new Set();
+let trie = {};
+let mode = "easy";
+let currentWord = "รถไฟ";
+let targetWord = "ไฟ";
+let score = 0, combo = 0, bestCombo = 0, timeLeft = 60;
+let timer = null, usedWords = new Set(), roundWords = [];
+let player = "ผู้เล่น";
+
+const $ = id => document.getElementById(id);
+const graphemes = new Intl.Segmenter("th",{granularity:"grapheme"});
+
+function cleanWord(value){
+ return String(value||"").normalize("NFC").replace(/[\s\u200B-\u200D\uFEFF]/g,"").trim();
+}
+function countGraphemes(value){return [...graphemes.segment(value)].length;}
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function setDictionaryStatus(message,ready=false){
+ $("dictStatus").classList.toggle("ready",ready);
+ $("dictStatus").querySelector("span").textContent=message;
+}
+function showFeedback(message,error=false){
+ $("feedback").textContent=message;
+ $("feedback").classList.toggle("error",error);
+}
+function normalizeDictionaryLine(line){
+ let value=cleanWord(line.replace(/#.*/,"").split(/\t|,/)[0]);
+ return /^[ก-๙]+$/.test(value)?value:"";
+}
+
+async function loadDictionary(){
+ setDictionaryStatus("กำลังโหลดคลังคำ...");
+ $("loadMessage").textContent="กำลังเชื่อมต่อแหล่งข้อมูลคำศัพท์ กรุณารอสักครู่";
+ let lastError=null;
+ for(const url of DICT_URLS){
+  try{
+   const response=await fetch(url,{cache:"force-cache"});
+   if(!response.ok)throw new Error("HTTP "+response.status);
+   const raw=await response.text();
+   const words=raw.split(/\r?\n/).map(normalizeDictionaryLine).filter(Boolean);
+   if(words.length<1000)throw new Error("จำนวนคำที่ได้รับไม่เพียงพอ");
+   dictionary=new Set(words);
+   buildTrie();
+   setDictionaryStatus("คลังคำพร้อมใช้งาน "+dictionary.size.toLocaleString()+" คำ",true);
+   $("loadMessage").textContent="โหลดคลังคำศัพท์สำเร็จ "+dictionary.size.toLocaleString()+" คำ";
+   $("startButton").disabled=false;
+   $("startButton").textContent="เริ่มเล่นเกม →";
+   return;
+  }catch(error){lastError=error;}
+ }
+ setDictionaryStatus("โหลดคลังคำไม่สำเร็จ");
+ $("loadMessage").textContent="โหลดพจนานุกรมไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตหรือเปิดผ่านเว็บเซิร์ฟเวอร์ แล้วกดรีเฟรชหน้า";
+ $("startButton").disabled=true;
+ console.error(lastError);
+}
+function buildTrie(){
+ trie={};
+ for(const word of dictionary){
+  let node=trie;
+  for(const char of Array.from(word)){
+   if(!node[char])node[char]={};
+   node=node[char];
+  }
+  node.$=true;
+ }
+}
+
+// แบ่งคำด้วยการจับคู่คำย่อยในพจนานุกรม โดยเลือกการแบ่งที่มีส่วนคำมากที่สุด
+function splitByDictionary(word,requiredFirst=""){
+ const chars=Array.from(word),memo=new Map();
+ function solve(pos){
+  if(pos===chars.length)return [];
+  if(memo.has(pos))return memo.get(pos);
+  let node=trie,best=null;
+  for(let end=pos;end<chars.length;end++){
+   node=node[chars[end]];
+   if(!node)break;
+   if(node.$){
+    const part=chars.slice(pos,end+1).join("");
+    if(pos===0&&requiredFirst&&part!==requiredFirst)continue;
+    const rest=solve(end+1);
+    if(rest!==null){
+     const candidate=[part,...rest];
+     if(!best||candidate.length>best.length)best=candidate;
+    }
+   }
+  }
+  memo.set(pos,best);
+  return best;
+ }
+ return solve(0);
+}
+function allowedByMode(word){
+ const length=countGraphemes(word);
+ if(mode==="easy") return COMMON_WORDS.has(word);
+ if(mode==="normal") return length>=2 && length<=6;
+ return length>=4;
+}
+function getStarter(){
+ const valid=starterCandidates.filter(word=>{
+  if(!dictionary.has(word)||!allowedByMode(word))return false;
+  const parts=splitByDictionary(word);
+  return parts&&parts.length>=2;
+ });
+ if(valid.length)return valid[Math.floor(Math.random()*valid.length)];
+ // เลือกคำเริ่มต้นที่ผ่านระดับความยากที่เลือก
+ const pool=[...dictionary].filter(word=>allowedByMode(word));
+ for(let i=0;i<Math.min(pool.length,5000);i++){
+  const word=pool[Math.floor(Math.random()*pool.length)];
+  const parts=splitByDictionary(word);
+  if(parts&&parts.length>=2)return word;
+ }
+ return null;
+}
+function chooseMode(value){
+ mode=value;
+ $("easyMode").classList.toggle("selected",mode==="easy");
+ $("normalMode").classList.toggle("selected",mode==="normal");
+ $("hardMode").classList.toggle("selected",mode==="hard");
+}
+function navigate(view){
+ document.querySelectorAll(".view").forEach(el=>el.classList.toggle("active",el.id===view));
+ document.querySelectorAll(".nav button").forEach(el=>el.classList.toggle("active",el.dataset.view===view));
+ if(view==="dashboard")renderDashboard();
+ if(view==="leaderboard")renderLeaderboard();
+}
+document.querySelectorAll(".nav button").forEach(button=>button.addEventListener("click",()=>navigate(button.dataset.view)));
+
+function startGame(){
+ if(!dictionary.size){showFeedback("ยังโหลดพจนานุกรมไม่สำเร็จ",true);return;}
+ clearInterval(timer);
+ player=cleanWord($("playerName").value)||"ผู้เล่น";
+ score=0;combo=0;bestCombo=0;timeLeft=60;
+ usedWords=new Set();roundWords=[];
+ const starter=getStarter();
+ if(!starter){alert("ไม่พบคำเริ่มต้นที่แบ่งคำได้ กรุณาตรวจสอบคลังคำศัพท์");return;}
+ currentWord=starter;
+ const parts=splitByDictionary(currentWord);
+ targetWord=parts[parts.length-1];
+ $("score").textContent="0";$("combo").textContent="0";$("time").textContent="60";
+ $("modeLabel").textContent=mode==="easy"?"โหมดเด็ก":mode==="normal"?"โหมดทั่วไป":"ท้าทาย";
+ $("wordCount").textContent="0";$("bestCombo").textContent="0";
+ $("currentWord").textContent=currentWord;$("targetWord").textContent=targetWord;
+ $("history").innerHTML='<span class="small-muted">ยังไม่มีคำตอบ</span>';
+ $("answerInput").value="";$("progressBar").style.width="100%";
+ showFeedback("เริ่มเกมแล้ว! พิมพ์คำที่ขึ้นต้นด้วยคำเชื่อมได้เลย");
+ navigate("play");$("answerInput").focus();
+ timer=setInterval(()=>{
+  timeLeft--;
+  $("time").textContent=timeLeft;
+  $("progressBar").style.width=(timeLeft/60*100)+"%";
+  if(timeLeft<=0)finishGame();
+ },1000);
+}
+function restartGame(){startGame();}
+function submitAnswer(){
+ if(!timer||timeLeft<=0)return;
+ const answer=cleanWord($("answerInput").value);
+ if(!answer){showFeedback("กรุณาพิมพ์คำตอบก่อน",true);return;}
+ if(!/^[ก-๙]+$/.test(answer)){showFeedback("กรุณาใช้ตัวอักษรภาษาไทยเท่านั้น",true);return;}
+ if(!dictionary.has(answer)){combo=0;$("combo").textContent=0;showFeedback("ไม่พบคำนี้ในพจนานุกรม กรุณาลองคำศัพท์อื่น",true);return;}
+ if(!allowedByMode(answer)){showFeedback(mode==="easy"?"โหมดเด็กเน้นคำง่าย ๆ ที่คุ้นเคย ลองใช้คำในชีวิตประจำวันนะครับ":mode==="normal"?"โหมดทั่วไปใช้คำที่มีความยาวไม่เกิน 6 กลุ่มอักขระ":"โหมดท้าทายต้องใช้คำอย่างน้อย 4 กลุ่มอักขระ",true);return;}
+ if(!answer.startsWith(targetWord)){combo=0;$("combo").textContent=0;showFeedback("คำตอบต้องขึ้นต้นด้วย “"+targetWord+"”",true);return;}
+ if(usedWords.has(answer)||answer===currentWord){showFeedback("คำนี้ถูกใช้ไปแล้วในรอบนี้",true);return;}
+
+ const parts=splitByDictionary(answer,targetWord);
+ if(!parts||parts.length<2){
+  combo=0;$("combo").textContent=0;
+  showFeedback("พบคำนี้ในคลัง แต่ระบบยังแบ่งส่วนคำเพื่อเชื่อมต่อไม่ได้ ลองคำประสมคำอื่น",true);
+  return;
+ }
+ usedWords.add(answer);roundWords.push(answer);
+ combo++;bestCombo=Math.max(bestCombo,combo);
+ const earned=10+(combo>=3?5:0);
+ score+=earned;
+ currentWord=answer;targetWord=parts[parts.length-1];
+ $("score").textContent=score;$("combo").textContent=combo;
+ $("wordCount").textContent=roundWords.length;$("bestCombo").textContent=bestCombo;
+ $("currentWord").textContent=currentWord;$("targetWord").textContent=targetWord;
+ $("history").innerHTML=roundWords.slice(-14).reverse().map((w,i)=>`<span class="chip ${i===0?"latest":""}">${escapeHTML(w)}</span>`).join("");
+ showFeedback("ถูกต้อง! +"+earned+" คะแนน · คำถัดไปต้องขึ้นต้นด้วย “"+targetWord+"”");
+ $("answerInput").value="";$("answerInput").focus();
+}
+function finishGame(manual=false){
+ if(!timer)return;
+ clearInterval(timer);timer=null;
+ const record={name:player,mode,score,words:roundWords.length,bestCombo,wordsList:[...roundWords],date:new Date().toISOString()};
+ const records=loadRecords();records.push(record);saveRecords(records);
+ $("finalScore")&&($("finalScore").textContent=score);
+ renderDashboard();renderLeaderboard();
+ if(manual)showFeedback("จบเกมและบันทึกผลเรียบร้อย");
+ showResult(record);
+}
+function endGame(manual=false){finishGame(manual);}
+function showResult(record){
+ const old=$("resultModal");
+ if(old)old.remove();
+ const modal=document.createElement("div");
+ modal.id="resultModal";modal.className="modal-backdrop show";
+ modal.innerHTML=`<div class="modal"><div style="text-align:center;font-size:42px">🏆</div><h2 style="text-align:center">สรุปผลการเล่น</h2><p style="text-align:center">ผู้เล่น: <b>${escapeHTML(record.name)}</b></p><div style="text-align:center;font-size:52px;color:#ff7183;font-weight:800">${record.score}</div><p style="text-align:center">คะแนนรวม</p><div class="stats"><div class="stat"><span>คำที่เชื่อมได้</span><strong>${record.words}</strong></div><div class="stat"><span>คอมโบสูงสุด</span><strong>${record.bestCombo}</strong></div></div><p class="note">ระดับ: ${record.mode==="easy"?"โหมดเด็ก":record.mode==="normal"?"โหมดทั่วไป":"โหมดท้าทาย"} · บันทึกผลไว้ในอุปกรณ์นี้แล้ว</p><div class="close-row"><button class="btn secondary" onclick="this.closest('.modal-backdrop').remove();navigate('dashboard')">ดู Dashboard</button><button class="btn" onclick="this.closest('.modal-backdrop').remove();startGame()">เล่นอีกครั้ง</button></div></div>`;
+ document.body.appendChild(modal);
+}
+function loadRecords(){
+ try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");}catch(e){return [];}
+}
+function saveRecords(records){localStorage.setItem(STORAGE_KEY,JSON.stringify(records.slice(-500)));}
+function renderDashboard(){
+ const records=loadRecords(),games=records.length;
+ const points=records.reduce((s,r)=>s+r.score,0);
+ const words=records.reduce((s,r)=>s+r.words,0);
+ $("totalGames").textContent=games;$("totalPoints").textContent=points;
+ $("totalWords").textContent=words;$("averageScore").textContent=games?Math.round(points/games):0;
+ const top=[...records].sort((a,b)=>b.score-a.score).slice(0,5);
+ const max=Math.max(1,...top.map(r=>r.score));
+ $("scoreBars").innerHTML=top.length?top.map((r,i)=>`<div class="bar-row"><span>${i+1}. ${escapeHTML(r.name)}</span><div class="bar-track"><div style="width:${r.score/max*100}%"></div></div><b>${r.score}</b></div>`).join(""):'<div class="empty">ยังไม่มีข้อมูล</div>';
+ const easy=records.filter(r=>r.mode==="easy"),hard=records.filter(r=>r.mode==="hard");
+ const avg=a=>a.length?Math.round(a.reduce((s,r)=>s+r.score,0)/a.length):0;
+ const normal=records.filter(r=>r.mode==="normal");
+ $("modeStats").innerHTML=`<div class="bar-row"><span>🌱 โหมดเด็ก</span><div class="bar-track"><div style="width:${easy.length/games*100||0}%"></div></div><b>${easy.length}</b></div><div class="bar-row"><span>⭐ ทั่วไป</span><div class="bar-track"><div style="width:${normal.length/games*100||0}%"></div></div><b>${normal.length}</b></div><div class="bar-row"><span>🔥 ท้าทาย</span><div class="bar-track"><div style="width:${hard.length/games*100||0}%"></div></div><b>${hard.length}</b></div><p class="note">คะแนนเฉลี่ย เด็ก ${avg(easy)} · ทั่วไป ${avg(normal)} · ท้าทาย ${avg(hard)}</p>`;
+ const recent=[...records].reverse().slice(0,10);
+ $("recentRows").innerHTML=recent.length?recent.map(r=>`<tr><td>${new Date(r.date).toLocaleString("th-TH")}</td><td>${escapeHTML(r.name)}</td><td>${r.mode==="easy"?"เด็ก":r.mode==="normal"?"ทั่วไป":"ท้าทาย"}</td><td>${r.score}</td><td>${r.words}</td></tr>`).join(""):'<tr><td colspan="5" class="empty">ยังไม่มีข้อมูล</td></tr>';
+}
+function renderLeaderboard(){
+ const rows=[...loadRecords()].sort((a,b)=>b.score-a.score||b.words-a.words).slice(0,20);
+ $("leaderRows").innerHTML=rows.length?rows.map((r,i)=>`<tr><td class="rank">${i+1}</td><td>${escapeHTML(r.name)}</td><td>${r.mode==="easy"?"โหมดเด็ก":"ท้าทาย"}</td><td><b>${r.score}</b></td><td>${r.words}</td><td>${new Date(r.date).toLocaleDateString("th-TH")}</td></tr>`).join(""):'<tr><td colspan="6" class="empty">ยังไม่มีผู้เล่น</td></tr>';
+}
+function exportCSV(){
+ const rows=loadRecords();
+ if(!rows.length){alert("ยังไม่มีข้อมูลสำหรับส่งออก");return;}
+ const csv=[["ชื่อผู้เล่น","ระดับ","คะแนน","จำนวนคำ","คอมโบสูงสุด","วันที่","คำที่ตอบ"].join(","),
+ ...rows.map(r=>[r.name,r.mode,r.score,r.words,r.bestCombo,new Date(r.date).toLocaleString("th-TH"),(r.wordsList||[]).join(" ")].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(","))].join("\r\n");
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);const a=document.createElement("a");
+ a.href=url;a.download="รายงานเกมคำต้องเชื่อม.csv";a.click();URL.revokeObjectURL(url);
+}
+function showModal(){$("modal").classList.add("show")}
+function hideModal(){$("modal").classList.remove("show")}
+$("answerInput").addEventListener("keydown",e=>{if(e.key==="Enter")submitAnswer();});
+loadDictionary();
+</script>
+</body>
+</html>
